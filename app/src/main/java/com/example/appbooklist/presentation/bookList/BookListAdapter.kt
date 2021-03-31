@@ -7,57 +7,60 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.example.appbooklist.R
 import com.example.appbooklist.model.Book
 
-class BookListAdapter(private var context: Context, items: ArrayList<Book>) : BaseAdapter() {
+class BookListAdapter(
+    private var context: Context,
+    items: ArrayList<Book>,
+    private var listener: BookClickListener
+) : RecyclerView.Adapter<BookListAdapter.ViewHolder>() {
     var items: ArrayList<Book>? = null
+    private var viewHolder: ViewHolder? = null
 
     init {
         this.items = items
     }
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val viewHolder: ViewHolder?
-        var view: View? = convertView
-
-        if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.booklist_layout, null)
-            viewHolder =
-                ViewHolder(
-                    view
-                )
-            view.tag = viewHolder
-        } else {
-            viewHolder = view.tag as? ViewHolder
-        }
-
-        val item = getItem(position) as Book
-        viewHolder?.title!!.text = item.title
-        viewHolder.cover?.setImageResource(item.cover)
-
-        return view!!
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.booklist_layout, parent, false)
+        viewHolder = ViewHolder(view, listener)
+        return viewHolder!!
     }
 
-    override fun getItem(position: Int): Any {
-        return items?.get(position)!!
-    }
-
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
-
-    override fun getCount(): Int {
+    override fun getItemCount(): Int {
         return items?.count()!!
     }
 
-    private class ViewHolder(vista: View) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val item = items!![position]
+        holder.cover!!.setImageResource(item.cover)
+        holder.title!!.text = item.title
+    }
+
+    class ViewHolder(vista: View, listener: BookClickListener) : RecyclerView.ViewHolder(vista),
+        View.OnClickListener {
+        private var view: View = vista
         var title: TextView? = null
         var cover: ImageView? = null
 
+
+        private var clickListener: BookClickListener? = null
+
         init {
-            this.title = vista.findViewById(R.id.tvTitleListView)
-            this.cover = vista.findViewById(R.id.ivCoverListView)
+            this.title = view.findViewById(R.id.tvTitleListView)
+            this.cover = view.findViewById(R.id.ivCoverListView)
+
+            clickListener = listener
+
+            view.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+            clickListener?.onClick(v!!, adapterPosition)
         }
     }
+
 }

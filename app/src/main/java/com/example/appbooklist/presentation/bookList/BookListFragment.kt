@@ -7,8 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.ListView
 import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.appbooklist.R
 import com.example.appbooklist.presentation.bookDetails.BookDetails
 import com.example.appbooklist.model.Book
@@ -16,7 +17,7 @@ import com.example.appbooklist.presentation.bookDetails.BookDetailsFragment
 
 
 class BookListFragment : Fragment() {
-    private lateinit var lstBooks: ListView
+    private lateinit var rvBooks: RecyclerView
     private var actualPosition = 0
     private var landScreen = false
 
@@ -30,7 +31,7 @@ class BookListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_book_list, container, false)
-        lstBooks = view.findViewById(R.id.lvBookList)
+        rvBooks = view.findViewById(R.id.rvBookList)
         initListView()
         return view
     }
@@ -42,7 +43,6 @@ class BookListFragment : Fragment() {
         landScreen = flDetails != null && flDetails.visibility == View.VISIBLE
 
         if (landScreen) {
-            lstBooks.choiceMode = ListView.CHOICE_MODE_SINGLE
             showDetails(actualPosition)
         }
 
@@ -52,6 +52,7 @@ class BookListFragment : Fragment() {
         super.onCreate(savedInstanceState)
         createList()
     }
+
     private fun createList() {
         bookList = ArrayList()
         bookList.add(
@@ -103,16 +104,21 @@ class BookListFragment : Fragment() {
             )
         )
     }
+
     private fun initListView() {
+        rvBooks.setHasFixedSize(true)
+        rvBooks.layoutManager = LinearLayoutManager(activity)
         val adapter =
             BookListAdapter(
                 activity!!,
-                bookList
+                bookList, object : BookClickListener {
+                    override fun onClick(vista: View, index: Int) {
+                        showDetails(index)
+                    }
+                }
             )
-        lstBooks.adapter = adapter
-        lstBooks.setOnItemClickListener { _, _, position, _ ->
-            showDetails(position)
-        }
+        rvBooks.adapter = adapter
+
     }
 
     private fun showDetails(index: Int) {
