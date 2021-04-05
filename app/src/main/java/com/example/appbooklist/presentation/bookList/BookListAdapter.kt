@@ -1,10 +1,8 @@
 package com.example.appbooklist.presentation.bookList
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -12,7 +10,6 @@ import com.example.appbooklist.R
 import com.example.appbooklist.model.Book
 
 class BookListAdapter(
-    private var context: Context,
     items: ArrayList<Book>,
     private var listener: BookClickListener
 ) : RecyclerView.Adapter<BookListAdapter.ViewHolder>() {
