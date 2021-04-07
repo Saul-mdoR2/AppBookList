@@ -9,10 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.appbooklist.R
 import com.example.appbooklist.model.Book
 
-class BookListAdapter(
-    items: ArrayList<Book>,
-    private val clickListener: (Book) -> Unit
-) : RecyclerView.Adapter<BookListAdapter.ViewHolder>() {
+class BookListAdapter2( items: ArrayList<Book>, private var clickListener: BookClickListener):RecyclerView.Adapter<BookListAdapter2.ViewHolder>() {
     var items: ArrayList<Book>? = null
     private var viewHolder: ViewHolder? = null
 
@@ -24,11 +21,11 @@ class BookListAdapter(
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.booklist_layout, parent, false)
         viewHolder = ViewHolder(view, clickListener)
+        viewHolder
         return viewHolder!!
     }
 
-    override fun getItemCount(): Int = items?.count()!!
-
+    override fun getItemCount(): Int = items!!.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items!![position]
@@ -36,17 +33,25 @@ class BookListAdapter(
         holder.title!!.text = item.title
     }
 
-    class ViewHolder(view: View, private val clickListener: (Book) -> Unit) : RecyclerView.ViewHolder(view){
-        private var vista: View = view
+    class ViewHolder(vista: View, listener: BookClickListener) : RecyclerView.ViewHolder(vista), View.OnClickListener {
+        private var view: View = vista
         var title: TextView? = null
         var cover: ImageView? = null
 
+
+        private var clickListener: BookClickListener? = null
+
         init {
-            this.title = this.vista.findViewById(R.id.tvTitleListView)
-            this.cover = this.vista.findViewById(R.id.ivCoverListView)
-            vista.setOnClickListener {
-                clickListener
-            }
+
+            this.title = view.findViewById(R.id.tvTitleListView)
+            this.cover = view.findViewById(R.id.ivCoverListView)
+            clickListener = listener
+
+            vista.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+            clickListener?.onClick(adapterPosition)
         }
     }
 
