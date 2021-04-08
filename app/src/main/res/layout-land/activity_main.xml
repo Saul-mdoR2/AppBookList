@@ -6,13 +6,13 @@
     android:orientation="horizontal">
 
     <FrameLayout
-        android:id="@+id/flListLand"
+        android:id="@+id/flListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1" />
 
     <FrameLayout
-        android:id="@+id/flDetailsLand"
+        android:id="@+id/flDetailsFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1" />

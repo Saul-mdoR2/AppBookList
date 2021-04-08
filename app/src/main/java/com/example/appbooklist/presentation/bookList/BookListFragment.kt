@@ -17,10 +17,15 @@ class BookListFragment : Fragment() {
     private lateinit var rvBooks: RecyclerView
     private var bookList: ArrayList<Book>? = null
     private lateinit var listener: BookInteractionListener
-    private lateinit var v:View
+    private lateinit var v: View
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         v = inflater.inflate(R.layout.fragment_book_list, container, false)
+        rvBooks = v.findViewById(R.id.rvBookList)
         return v
     }
 
@@ -34,21 +39,12 @@ class BookListFragment : Fragment() {
         rvBooks = v.findViewById(R.id.rvBookList)
         rvBooks.setHasFixedSize(true)
         rvBooks.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-       /* bookList?.let {
+        bookList?.let {
             val adapter = BookListAdapter(it) { book ->
                 listener.onBookFromListClicked(bookId = book.bookId)
             }
             rvBooks.adapter = adapter
-        }*/
-        val adapter2 = bookList?.let {
-            BookListAdapter2(it,object :BookClickListener{
-                override fun onClick(index: Int) {
-                    val book = it[index]
-                    listener.onBookFromListClicked(bookId = book.bookId)
-                }
-            })
         }
-        rvBooks.adapter = adapter2
     }
 
     fun setItems(data: ArrayList<Book>) {

@@ -13,7 +13,7 @@ import com.example.appbooklist.presentation.bookList.BookListFragment
 
 
 class BookDetailsFragment : Fragment() {
-    var v: View? = null
+    private lateinit var v: View
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -29,17 +29,17 @@ class BookDetailsFragment : Fragment() {
     }
 
     private fun updateBookDetails() {
-        val cover: ImageView = v!!.findViewById(R.id.ivCover)
-        val title: TextView = v!!.findViewById(R.id.tvTitle)
-        val author: TextView = v!!.findViewById(R.id.tvAuthor)
-        val synopsis: TextView = v!!.findViewById(R.id.tvSynopsis)
+        val cover: ImageView = v.findViewById(R.id.ivCover)
+        val title: TextView = v.findViewById(R.id.tvTitle)
+        val author: TextView = v.findViewById(R.id.tvAuthor)
+        val synopsis: TextView = v.findViewById(R.id.tvSynopsis)
 
         val data = arguments?.getParcelable<Book>("data")
 
-        cover.setImageResource(data!!.cover)
-        title.text = data.title
-        author.text = data.author
-        synopsis.text = data.synopsis
+        data?.cover?.let { cover.setImageResource(it) }
+        title.text = data?.title
+        author.text = data?.author
+        synopsis.text = data?.synopsis
     }
 
     companion object {
